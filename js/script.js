@@ -21,18 +21,16 @@ $(document).ready(function () { //wait for documanet to be ready
             let studentMin = page * 10;
             let studentMax = studentMin + 9;
 
-            // Arrays for jQuery targets
+            // Array for jQuery target
             let showList = [];
-            let hideList = [];
 
             if(i >= studentMin && i <= studentMax){
-                showList.push(currentStudent);
+                showList.push(currentStudent)
             }else{
-                hideList.push(currentStudent);
+                $(currentStudent).css('display', 'none')
             }
 
-            // adding hide to the old students and fading in the new students
-            $(hideList).hide();
+            // fading in the students that should show
             $(showList).fadeIn();
         }
     }
