@@ -16,7 +16,7 @@ $(document).ready(function () { //wait for documanet to be ready
     // Create a function to hide all of the items in the list excpet for the ten you want to show
     // Tip: Keep in mind that with a list of 54 studetns, the last page will only display four
     function showPage(list, page){
-        for(var i = 0; i <= list.length; i++){
+        for(let i = 0; i <= list.length; i++){
             let currentStudent = list[i];
             let studentMin = ((page * 10) - 10);
             let studentMax = ((page * 10) - 1);
@@ -33,11 +33,11 @@ $(document).ready(function () { //wait for documanet to be ready
 
     // Create and append the pagination links - Creating a function that can do this is a good approach
     function appendPageLinks(list) {
-        const pagesNeeded = Math.ceil(list.length / 10); //rounds to the highest integer
+        // const pagesNeeded = Math.ceil(list.length / 10); //rounds to the highest integer
 
         //conditional to remove any pagination already in place
         if($(paginationDiv).children()){
-            $(paginationDiv).empty();
+            $(paginationDiv).remove();
         }
 
         // create the new div for pagination
@@ -102,18 +102,17 @@ $(document).ready(function () { //wait for documanet to be ready
     $($searchBar).append($searchButton);
 
     // Variables for search functionality
-    let $filter = $($searchField).val().toLowerCase();
-    let $names = $('li.student-item h3');
+    // let $names = $('li.student-item h3');
 
-    $($searchBar).on('keyup', (event) => {
-        for (var i = 0; i < $names.length; i++) {
-            let currentName = $($names[i]).text();
-            console.log($('' + currentName + ':contains(' + $filter + ')'));
-            if ($(currentName + ':contains(' + $filter + ')')) {
-                $($fullList[i]).show();
-            }else{
-                $($fullList[i]).hide();
-            };
+    // targeting h3 name elements
+    $('li.student-item h3').addClass('student-name');
+
+    $($searchBar).on('keyup', () => {
+        for (let i = 0; i < $fullList.length; i++) {
+            let $filter = $($searchField).val().toLowerCase();
+            // let currentName = $($names[i]).text();
+            $('h3.student-name:not(:contains('+ $filter +'))').parentsUntil('ul').hide()
+            $('h3.student-name:contains('+ $filter +')').parentsUntil('ul').show()
         };
         // appendPageLinks($fullList);
     });
