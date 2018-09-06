@@ -166,9 +166,9 @@ $(document).ready(function () { //wait for documanet to be ready
             let $filter = $($searchField).val().toLowerCase();
 
             $('h3.student-name:not(:contains('+ $filter +'))').parentsUntil('ul').hide()
-            $('h3.student-name:contains('+ $filter +')').parentsUntil('ul').addClass().show()
+            $('h3.student-name:contains('+ $filter +')').parentsUntil('ul').show()
         };
-        // appendPageLinks($fullList);
+        appendPageLinks($fullList);
     });
     //--------------------SEARCH CONTENT CLOSE-------------------------------//
     //begins the pagination function stack
