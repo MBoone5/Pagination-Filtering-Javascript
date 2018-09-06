@@ -18,20 +18,14 @@ $(document).ready(function () { //wait for documanet to be ready
     function showPage(list, page){
         for(var i = 0; i <= list.length; i+= 1){
             let currentStudent = list[i];
-            let studentMin = page * 10;
-            let studentMax = studentMin + 9;
-
-            // Array for jQuery target
-            let showList = [];
+            let studentMin = (page * 10);
+            let studentMax = (studentMin + 9);
 
             if(i >= studentMin && i <= studentMax){
-                showList.push(currentStudent)
+                $(currentStudent).css('display', 'block');
             }else{
                 $(currentStudent).css('display', 'none')
             }
-
-            // fading in the students that should show
-            $(showList).fadeIn();
         }
     }
 
