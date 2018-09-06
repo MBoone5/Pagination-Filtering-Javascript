@@ -33,7 +33,7 @@ $(document).ready(function () { //wait for documanet to be ready
 
     // Create and append the pagination links - Creating a function that can do this is a good approach
     function appendPageLinks(list) {
-        // const pagesNeeded = Math.ceil(list.length / 10); //rounds to the highest integer
+        const pagesNeeded = Math.ceil(list.length / 10); //rounds to the highest integer
 
         //conditional to remove any pagination already in place
         if($(paginationDiv).children()){
@@ -101,8 +101,62 @@ $(document).ready(function () { //wait for documanet to be ready
     $($searchBar).append($searchField);
     $($searchBar).append($searchButton);
 
-    // Variables for search functionality
-    // let $names = $('li.student-item h3');
+    // modified pagination function for paginating search results
+    function searchPageLinks(filteredStudents) {
+        const pagesNeeded = Math.ceil(filteredStudents / 10); //rounds to the highest integer
+        //conditional to remove any pagination already in place
+        if($(paginationDiv).children()){
+            $(paginationDiv).remove();
+        }
+
+        // create the new div for pagination
+        let $newPagiDiv = $('<div></div>').addClass('pagination');
+
+        //append the new div for pagination
+        $page.append($newPagiDiv);
+
+        // adding content to the pagination div
+        let $pagiUl = $('<ul></ul>');
+        $newPagiDiv.append($pagiUl);
+
+        for(i = 1; i <= pagesNeeded; ++i){
+            //creating links for pagination
+            let $pagiLi = $('<li></li>').addClass('pagination');
+            let $pagiA = $('<a></a>').addClass('pagination');
+
+            // appending the links to the document
+            $($newPagiDiv).append($pagiLi);
+            $($pagiLi).append($pagiA);
+
+            //adding the page number to the pagination link
+            $pagiA.append([i]);
+
+            if(i === 1){
+                $($pagiA).addClass('active');
+            }
+
+
+            //adding event listeners to each anchor
+            $('a.pagination').click((event) => {
+                let activeLink = event.target;
+                let currentPage = event.target.textContent;
+
+                // removing teh active class from the previous anchor
+                $('a.pagination').removeClass('active');
+
+                // adding active to the current anchor
+                $(activeLink).addClass('active');
+
+                // Add functionality to the pagination buttons so that they show and hide the correct items
+                // Tip: If you created a function above to show/hide list items, it could be helpful here
+                showPage($fullList, currentPage);
+
+            });
+        }
+
+        // initializing the pagination
+        showPage($fullList, 1);
+    }
 
     // targeting h3 name elements
     $('li.student-item h3').addClass('student-name');
@@ -110,9 +164,9 @@ $(document).ready(function () { //wait for documanet to be ready
     $($searchBar).on('keyup', () => {
         for (let i = 0; i < $fullList.length; i++) {
             let $filter = $($searchField).val().toLowerCase();
-            // let currentName = $($names[i]).text();
+
             $('h3.student-name:not(:contains('+ $filter +'))').parentsUntil('ul').hide()
-            $('h3.student-name:contains('+ $filter +')').parentsUntil('ul').show()
+            $('h3.student-name:contains('+ $filter +')').parentsUntil('ul').addClass().show()
         };
         // appendPageLinks($fullList);
     });
