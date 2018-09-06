@@ -16,15 +16,15 @@ $(document).ready(function () { //wait for documanet to be ready
     // Create a function to hide all of the items in the list excpet for the ten you want to show
     // Tip: Keep in mind that with a list of 54 studetns, the last page will only display four
     function showPage(list, page){
-        for(var i = 0; i <= list.length; i+= 1){
+        for(var i = 0; i <= list.length; i++){
             let currentStudent = list[i];
-            let studentMin = (page * 10);
-            let studentMax = (studentMin + 9);
+            let studentMin = ((page * 10) - 10);
+            let studentMax = ((page * 10) - 1);
 
             if(i >= studentMin && i <= studentMax){
-                $(currentStudent).css('display', 'block');
+                $(currentStudent).show();
             }else{
-                $(currentStudent).css('display', 'none')
+                $(currentStudent).hide();
             }
         }
     }
@@ -41,39 +41,36 @@ $(document).ready(function () { //wait for documanet to be ready
         }
 
         // create the new div for pagination
-        let newPagiDiv = document.createElement('div');
-        $(newPagiDiv).addClass('pagination');
+        let $newPagiDiv = $('<div></div>').addClass('pagination');
 
         //append the new div for pagination
-        $page.append(newPagiDiv);
+        $page.append($newPagiDiv);
 
         // adding content to the pagination div
-        let pagiUl = document.createElement('ul');
-        newPagiDiv.append(pagiUl);
+        let $pagiUl = $('<ul></ul>');
+        $newPagiDiv.append($pagiUl);
 
         for(i = 1; i <= pagesNeeded; ++i){
             //creating links for pagination
-            let pagiLi = document.createElement('li');
-            let pagiA = document.createElement('a');
-            $(pagiLi).addClass('pagination');
-            $(pagiA).addClass('pagination');
+            let $pagiLi = $('<li></li>').addClass('pagination');
+            let $pagiA = $('<a></a>').addClass('pagination');
 
             // appending the links to the document
-            $(newPagiDiv).append(pagiLi);
-            $(pagiLi).append(pagiA);
+            $($newPagiDiv).append($pagiLi);
+            $($pagiLi).append($pagiA);
 
             //adding the page number to the pagination link
-            pagiA.append([i]);
+            $pagiA.append([i]);
 
             if(i === 1){
-                $(pagiA).addClass('active');
+                $($pagiA).addClass('active');
             }
 
 
             //adding event listeners to each anchor
             $('a.pagination').click((event) => {
                 let activeLink = event.target;
-                let currentPage = (parseInt(event.target.textContent, 10) - 1);
+                let currentPage = event.target.textContent;
 
                 // removing teh active class from the previous anchor
                 $('a.pagination').removeClass('active');
@@ -89,34 +86,33 @@ $(document).ready(function () { //wait for documanet to be ready
         }
 
         // initializing the pagination
-        showPage($fullList, 0);
+        showPage($fullList, 1);
     }
 
     //------------------------PAGINATION CONTENT CLOSE---------------------------//
 
     //------------------------SEARCH CONTENT OPEN--------------------------------//
     //adding elements for the search bar
-    let searchBar = document.createElement('div.student-search');
-    let searchField = document.createElement('input');
-    $(searchField).attr('placeholder', 'Search for students...');
-    let searchButton = document.createElement('button');
-    $(searchButton).append('Search');
+    let $searchBar = $('<div></div>').addClass('student-search');
+    let $searchField = $('<input>').attr('placeholder', 'Search for students...');
+    let $searchButton = $('<button></button>').text('Search');
 
-    $('div.page-header').append(searchBar);
-    $(searchBar).append(searchField);
-    $(searchBar).append(searchButton);
+    $('div.page-header').append($searchBar);
+    $($searchBar).append($searchField);
+    $($searchBar).append($searchButton);
 
     // Variables for search functionality
-    let $filter = $(searchField).val().toLowerCase();
-    let $names = $($fullList).children('h3');
+    let $filter = $($searchField).val().toLowerCase();
+    let $names = $('li.student-item h3');
 
-    $(searchBar).on('keyup', (event) => {
+    $($searchBar).on('keyup', (event) => {
         for (var i = 0; i < $names.length; i++) {
-            let currentName = $names[i];
-            if ($(currentName + ':contains('+$filter+')')) {
-                $(currentName).show();
+            let currentName = $($names[i]).text();
+            console.log($('' + currentName + ':contains(' + $filter + ')'));
+            if ($(currentName + ':contains(' + $filter + ')')) {
+                $($fullList[i]).show();
             }else{
-                $(currentName).hide();
+                $($fullList[i]).hide();
             };
         };
         // appendPageLinks($fullList);
