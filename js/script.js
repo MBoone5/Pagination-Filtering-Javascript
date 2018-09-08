@@ -94,11 +94,34 @@ $(document).ready(function () { //wait for documanet to be ready
     let $searchField = $('<input>').attr('placeholder', 'Search for students...');
     let $searchButton = $('<button></button>').text('Search');
 
+    // adding search bar + button
     $('div.page-header').append($searchBar);
     $($searchBar).append($searchField);
     $($searchBar).append($searchButton);
 
-    $($searchBar).keyup(() => {
+    //event for keyup
+    $($searchBar).keyup( () => {
+        //declare the content of the search input
+        let $filter = $($searchField).val().toLowerCase();
+
+        // find which h3 elements do and do not contain the search input
+        let $containsFilter = $('li:contains('+ $filter +')');
+        let $notContainsFilter = $('li:not(:contains('+ $filter +'))');
+
+
+        // hide li's that do not contain the filter
+        $($notContainsFilter).hide();
+
+        // show li's that do contain the filter
+        $($containsFilter).show();
+
+        //paginate students in the $containsFilter array
+        appendPageLinks($containsFilter);
+    });
+
+
+    //event for submit
+    $($searchButton).click(() => {
         //declare the content of the search input
         let $filter = $($searchField).val().toLowerCase();
 
