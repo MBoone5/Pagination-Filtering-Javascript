@@ -33,6 +33,7 @@ $(document).ready(function () { //wait for documanet to be ready
 
         //conditional to remove any pagination already in place
         if($('div.pagination')) {
+            $('div.pagination').empty();
             $('div.pagination').remove();
         }
 
@@ -97,9 +98,6 @@ $(document).ready(function () { //wait for documanet to be ready
     $($searchBar).append($searchField);
     $($searchBar).append($searchButton);
 
-    // targeting h3 name elements
-    $('li.student-item h3').addClass('student-name');
-
     $($searchBar).keyup(() => {
         let studentsFiltered = [];
         for (let i = 0; i < $fullList.length; i++) {
@@ -112,16 +110,16 @@ $(document).ready(function () { //wait for documanet to be ready
             // hide li's that do not contain the filter
             $($notContainsFilter).hide();
 
-            // show li's that do contain the filter, and add 1 the studentsFiltered
-            for (var j = 0; j < $containsFilter.length; j++) {
-                $($containsFilter[i]).show();
-                studentsFiltered.push($containsFilter[i]);
+            // show li's that do contain the filter
+            $($containsFilter).show();
 
-            }
+            // Declare the filtered students as the value of the studentsFiltered array
+            console.log($containsFilter);
+            studentsFiltered.push($containsFilter)
         };
         //make an array of all the students currently showing
         //paginate students in that array
-        appendPageLinks(studentsFiltered);
+        // appendPageLinks(studentsFiltered);
     });
     //--------------------SEARCH CONTENT CLOSE-------------------------------//
 
