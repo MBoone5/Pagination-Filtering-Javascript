@@ -118,3 +118,9 @@ body{
       background-color: #4ba6c3;
       color: #fff;
     }
+
+.message-div h1 {
+    padding: 15px;
+    text-align: center;
+    font-weight: bold;
+}

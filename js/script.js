@@ -25,17 +25,20 @@ $(document).ready(function () { //wait for documanet to be ready
         }
     }
 
-
+    //function to remove any current pagination
+    function removePagination() {
+        if($('div.pagination')) {
+            $('div.pagination').empty();
+            $('div.pagination').remove();
+        }
+    }
 
     // Create and append the pagination links - Creating a function that can do this is a good approach
     function appendPageLinks(list) {
         const pagesNeeded = Math.ceil(list.length / 10); //rounds to the highest integer
 
-        //conditional to remove any pagination already in place
-        if($('div.pagination')) {
-            $('div.pagination').empty();
-            $('div.pagination').remove();
-        }
+        //removing any exisiting pagination
+        removePagination();
 
         // create the new div for pagination
         let $pagiDiv = $('<div></div>').addClass('pagination');
@@ -89,7 +92,7 @@ $(document).ready(function () { //wait for documanet to be ready
     //------------------------PAGINATION CONTENT CLOSE---------------------------//
 
     //------------------------SEARCH CONTENT OPEN--------------------------------//
-    //adding elements for the search bar
+    //declaring elements for the search bar
     let $searchBar = $('<div></div>').addClass('student-search');
     let $searchField = $('<input>').attr('placeholder', 'Search for students...');
     let $searchButton = $('<button></button>').text('Search');
@@ -99,10 +102,21 @@ $(document).ready(function () { //wait for documanet to be ready
     $($searchBar).append($searchField);
     $($searchBar).append($searchButton);
 
-    //event for keyup
-    $($searchBar).keyup( () => {
+
+    function filterStudents(input) {
+        // clearing the error message div if it is there
+        if ($('div.message-div')) {
+            $('div.message-div').empty();
+            $('div.message-div').remove();
+        }
+
+        //declaring elements for no results
+        let $messageDiv =$('<div></div>').addClass('message-div');
+        let $noResults = $("<h1></h1>").text('No students match your search');
+        $($messageDiv).append($noResults);
+
         //declare the content of the search input
-        let $filter = $($searchField).val().toLowerCase();
+        let $filter = $(input).val().toLowerCase();
 
         // find which h3 elements do and do not contain the search input
         let $containsFilter = $('li:contains('+ $filter +')');
@@ -115,29 +129,28 @@ $(document).ready(function () { //wait for documanet to be ready
         // show li's that do contain the filter
         $($containsFilter).show();
 
-        //paginate students in the $containsFilter array
-        appendPageLinks($containsFilter);
+        // conditional to either paginate the results or display the message
+        if ($containsFilter.length > 0) {
+            //paginate students in the $containsFilter array
+            appendPageLinks($containsFilter);
+        }else {
+            //removing exisiting pagination
+            removePagination();
+
+            //displaying the message
+            $('ul.student-list').prepend($messageDiv);
+        }
+    }
+
+    //event for keyup
+    $($searchBar).keyup( () => {
+        filterStudents($searchField);
     });
 
 
     //event for submit
     $($searchButton).click(() => {
-        //declare the content of the search input
-        let $filter = $($searchField).val().toLowerCase();
-
-        // find which h3 elements do and do not contain the search input
-        let $containsFilter = $('li:contains('+ $filter +')');
-        let $notContainsFilter = $('li:not(:contains('+ $filter +'))');
-
-
-        // hide li's that do not contain the filter
-        $($notContainsFilter).hide();
-
-        // show li's that do contain the filter
-        $($containsFilter).show();
-
-        //paginate students in the $containsFilter array
-        appendPageLinks($containsFilter);
+        filterStudents($searchField);
     });
     //--------------------SEARCH CONTENT CLOSE-------------------------------//
 
