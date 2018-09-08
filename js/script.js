@@ -9,10 +9,6 @@ $(document).ready(function () { //wait for documanet to be ready
     const $fullList = $('li.student-item'); //array containtin each li representing a student
     const $page = $('div.page');
 
-    //creating the div for PAGINATION
-    const paginationDiv = document.createElement('div.pagination');
-    $($page).append(paginationDiv);
-
     // Create a function to hide all of the items in the list excpet for the ten you want to show
     // Tip: Keep in mind that with a list of 54 studetns, the last page will only display four
     function showPage(list, page){
@@ -36,19 +32,19 @@ $(document).ready(function () { //wait for documanet to be ready
         const pagesNeeded = Math.ceil(list.length / 10); //rounds to the highest integer
 
         //conditional to remove any pagination already in place
-        if($(paginationDiv).children()){
-            $(paginationDiv).remove();
+        if($('div.pagination')) {
+            $('div.pagination').remove();
         }
 
         // create the new div for pagination
-        let $newPagiDiv = $('<div></div>').addClass('pagination');
+        let $pagiDiv = $('<div></div>').addClass('pagination');
 
         //append the new div for pagination
-        $page.append($newPagiDiv);
+        $page.append($pagiDiv);
 
         // adding content to the pagination div
         let $pagiUl = $('<ul></ul>');
-        $newPagiDiv.append($pagiUl);
+        $pagiDiv.append($pagiUl);
 
         for(i = 1; i <= pagesNeeded; ++i){
             //creating links for pagination
@@ -56,7 +52,7 @@ $(document).ready(function () { //wait for documanet to be ready
             let $pagiA = $('<a></a>').addClass('pagination');
 
             // appending the links to the document
-            $($newPagiDiv).append($pagiLi);
+            $($pagiUl).append($pagiLi);
             $($pagiLi).append($pagiA);
 
             //adding the page number to the pagination link
@@ -80,13 +76,13 @@ $(document).ready(function () { //wait for documanet to be ready
 
                 // Add functionality to the pagination buttons so that they show and hide the correct items
                 // Tip: If you created a function above to show/hide list items, it could be helpful here
-                showPage($fullList, currentPage);
+                showPage(list, currentPage);
 
             });
         }
 
         // initializing the pagination
-        showPage($fullList, 1);
+        showPage(list, 1);
     }
 
     //------------------------PAGINATION CONTENT CLOSE---------------------------//
@@ -101,76 +97,34 @@ $(document).ready(function () { //wait for documanet to be ready
     $($searchBar).append($searchField);
     $($searchBar).append($searchButton);
 
-    // modified pagination function for paginating search results
-    function searchPageLinks(filteredStudents) {
-        const pagesNeeded = Math.ceil(filteredStudents / 10); //rounds to the highest integer
-        //conditional to remove any pagination already in place
-        if($(paginationDiv).children()){
-            $(paginationDiv).remove();
-        }
-
-        // create the new div for pagination
-        let $newPagiDiv = $('<div></div>').addClass('pagination');
-
-        //append the new div for pagination
-        $page.append($newPagiDiv);
-
-        // adding content to the pagination div
-        let $pagiUl = $('<ul></ul>');
-        $newPagiDiv.append($pagiUl);
-
-        for(i = 1; i <= pagesNeeded; ++i){
-            //creating links for pagination
-            let $pagiLi = $('<li></li>').addClass('pagination');
-            let $pagiA = $('<a></a>').addClass('pagination');
-
-            // appending the links to the document
-            $($newPagiDiv).append($pagiLi);
-            $($pagiLi).append($pagiA);
-
-            //adding the page number to the pagination link
-            $pagiA.append([i]);
-
-            if(i === 1){
-                $($pagiA).addClass('active');
-            }
-
-
-            //adding event listeners to each anchor
-            $('a.pagination').click((event) => {
-                let activeLink = event.target;
-                let currentPage = event.target.textContent;
-
-                // removing teh active class from the previous anchor
-                $('a.pagination').removeClass('active');
-
-                // adding active to the current anchor
-                $(activeLink).addClass('active');
-
-                // Add functionality to the pagination buttons so that they show and hide the correct items
-                // Tip: If you created a function above to show/hide list items, it could be helpful here
-                showPage($fullList, currentPage);
-
-            });
-        }
-
-        // initializing the pagination
-        showPage($fullList, 1);
-    }
-
     // targeting h3 name elements
     $('li.student-item h3').addClass('student-name');
 
-    $($searchBar).on('keyup', () => {
+    $($searchBar).keyup(() => {
+        let studentsFiltered = [];
         for (let i = 0; i < $fullList.length; i++) {
             let $filter = $($searchField).val().toLowerCase();
 
-            $('h3.student-name:not(:contains('+ $filter +'))').parentsUntil('ul').hide()
-            $('h3.student-name:contains('+ $filter +')').parentsUntil('ul').show()
+            // find which h3 elements do and do not contain the search input
+            let $containsFilter = $('h3.student-name:contains('+ $filter +')');
+            let $notContainsFilter = $('h3.student-name:not(:contains('+ $filter +'))');
+
+            // hide li's that do not contain the filter
+            $($notContainsFilter).parentsUntil('ul').hide();
+
+            // show li's that do contain the filter, and add 1 the studentsFiltered
+            for (var j = 0; j < $containsFilter.length; j++) {
+                $($containsFilter[i]).parentsUntil('ul').show();
+                studentsFiltered.push($containsFilter[i]);
+
+            }
         };
-        appendPageLinks($fullList);
+        //make an array of all the students currently showing
+        //paginate students in that array
+        appendPageLinks(studentsFiltered);
     });
     //--------------------SEARCH CONTENT CLOSE-------------------------------//
+
     //begins the pagination function stack
     appendPageLinks($fullList);
 });
