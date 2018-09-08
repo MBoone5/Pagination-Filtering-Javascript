@@ -99,27 +99,22 @@ $(document).ready(function () { //wait for documanet to be ready
     $($searchBar).append($searchButton);
 
     $($searchBar).keyup(() => {
-        let studentsFiltered = [];
-        for (let i = 0; i < $fullList.length; i++) {
-            let $filter = $($searchField).val().toLowerCase();
+        //declare the content of the search input
+        let $filter = $($searchField).val().toLowerCase();
 
-            // find which h3 elements do and do not contain the search input
-            let $containsFilter = $('li:contains('+ $filter +')');
-            let $notContainsFilter = $('li:not(:contains('+ $filter +'))');
+        // find which h3 elements do and do not contain the search input
+        let $containsFilter = $('li:contains('+ $filter +')');
+        let $notContainsFilter = $('li:not(:contains('+ $filter +'))');
 
-            // hide li's that do not contain the filter
-            $($notContainsFilter).hide();
 
-            // show li's that do contain the filter
-            $($containsFilter).show();
+        // hide li's that do not contain the filter
+        $($notContainsFilter).hide();
 
-            // Declare the filtered students as the value of the studentsFiltered array
-            console.log($containsFilter);
-            studentsFiltered.push($containsFilter)
-        };
-        //make an array of all the students currently showing
-        //paginate students in that array
-        // appendPageLinks(studentsFiltered);
+        // show li's that do contain the filter
+        $($containsFilter).show();
+
+        //paginate students in the $containsFilter array
+        appendPageLinks($containsFilter);
     });
     //--------------------SEARCH CONTENT CLOSE-------------------------------//
 
