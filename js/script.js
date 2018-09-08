@@ -106,15 +106,15 @@ $(document).ready(function () { //wait for documanet to be ready
             let $filter = $($searchField).val().toLowerCase();
 
             // find which h3 elements do and do not contain the search input
-            let $containsFilter = $('h3.student-name:contains('+ $filter +')');
-            let $notContainsFilter = $('h3.student-name:not(:contains('+ $filter +'))');
+            let $containsFilter = $('li:contains('+ $filter +')');
+            let $notContainsFilter = $('li:not(:contains('+ $filter +'))');
 
             // hide li's that do not contain the filter
-            $($notContainsFilter).parentsUntil('ul').hide();
+            $($notContainsFilter).hide();
 
             // show li's that do contain the filter, and add 1 the studentsFiltered
             for (var j = 0; j < $containsFilter.length; j++) {
-                $($containsFilter[i]).parentsUntil('ul').show();
+                $($containsFilter[i]).show();
                 studentsFiltered.push($containsFilter[i]);
 
             }
